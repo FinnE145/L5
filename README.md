@@ -4,6 +4,7 @@ L5, or Low Level Looping Linear Language, is a simple optionally-typed, non-obje
 It is centrally featured around working with a virtual memory strip, which can be accessed by index (called a pointer) or through ranges of indexes (called a range). Each index is 1 byte, but individual bits can be accessed.
 <hr>
 ## Typing
+
 Strict typing can be turned on or off for each program, meaning that if it is off (default), data is read off of memory as-is, and can be interpreted in numerous ways (but could lead to undexpected results). Eg:
 
 **Non-typed:**
