@@ -58,7 +58,7 @@ public class Lexer {
             } else if (s[i] == '\'') {
                 string val = bucket(s, i, new Regex("(?<!\\\\)\\'"));
                 if (val.Length > 1) {
-                    Error
+                    //Error
                 }
                 tokenList.Add(new Token("char", val.Remove('\''), i, i + val.Length));
             }
