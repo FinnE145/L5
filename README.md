@@ -1,7 +1,7 @@
 # L5
 L5, or Low Level Looping Linear Language, is a simple optionally-typed, non-object-oriented language written in C# that compiles to C# IL.
 <hr>
-It is centrally featured around working with a virtual memory strip, which can be accessed by index (called a pointer) or through ranges of indexes (called a range). Each index is 1 byte, but individual bits can be accessed.
+It is centrally featured around working with a virtual memory strip, which can be accessed by index (called a pointer) or through ranges of indexes (called a range). Each index is 1 byte, but individual bits can be accessed, and overflow is handled manually, but syntactic sugar is present to help.
 <hr>
 
 ## Typing
