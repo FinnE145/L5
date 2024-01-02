@@ -1,4 +1,4 @@
-﻿namespace L5;
+﻿namespace L5.Utils.Errors;
 
 public class Error {
     public string file = "";
@@ -8,17 +8,16 @@ public class Error {
     public int line = -1;
     public int lineOffset = -1;
     public string sample = "";
+    public bool raised = false;
 
-    private void GetLineNumber(string s, int start, out int line, out int lineOffset) {
+    public static void GetLineNumber(string s, int start, out int line, out int lineOffset) {
         line = 0;
         lineOffset = 0;
 
         for (int cc = 0; cc < start; cc++) {
-            Console.WriteLine($"At char {(s[cc] == '\n' ? "<nl>" : s[cc])}");
             if (s[cc] == '\n') {
                 line++;
                 lineOffset = cc;
-                Console.WriteLine($"Moved to line {line}");
             }
         }
     }
@@ -49,13 +48,17 @@ public class Error {
         this.file = file;
     }
 
+    public Error() {}
+
     private void RaiseArgs(string file, int line, int lStart, int lEnd, string message, string sample) {
+        raised = true;
         line += 1;
         lStart += line == 1 ? 1 : 0;
         lEnd += line == 1 ? 1 : 0;
         Console.WriteLine($"{this.GetType().Name} in {file}: {message}");
         Console.WriteLine($"Line {line}: {lStart}-{lEnd}> {sample}");
         Console.WriteLine($"{new string(' ', lStart + line.ToString().Length + lStart.ToString().Length + lEnd.ToString().Length + 9)}{new string('^', lEnd-lStart+1)}");
+        Console.WriteLine($"Path: {System.IO.Path.GetFullPath(file)}:{line}:{lStart}-{lEnd}");
     }
 
     private void RaiseWithLocalArgs(string file, string s, int line, int start, int end, string message) {
