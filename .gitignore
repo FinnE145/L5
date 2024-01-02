@@ -3,6 +3,9 @@
 # Test folder and scripts
 [Tt]est/
 
+# Test program (other specifically generated L5 programs will be tracked):
+[Tt]est.L5
+
 ### TEMPLATE IGNORES:
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudio,visualstudiocode,csharp
