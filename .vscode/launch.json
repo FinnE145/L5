@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Main Debug",
             "args": [
                 "test.L5"
             ],
@@ -13,7 +13,15 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/L5/L5/bin/Debug/net7.0/L5.dll",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/L5/Programs",
+        },
+        {
+            "name": "Test Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Test/bin/Debug/net7.0/Test.dll",
+            "cwd": "${workspaceFolder}/Test",
         }
     ]
 }
