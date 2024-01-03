@@ -85,8 +85,8 @@ public partial class Lexer {
         }
     }
 
-    private string bucket(string s, int i, Regex stop) {
-        return stop.Split(s.Substring(i))[0];
+    private string Bucket(string s, int i, Regex stop) {
+        return stop.Split(s[i..])[0];
     }
 
     public Token[][] Lex(string s) {
@@ -103,7 +103,7 @@ public partial class Lexer {
             } else if (char.IsDigit(s[i])) {
                 // Numbers
 
-                string val = bucket(s, i, NumRegex());
+                string val = Bucket(s, i, NumRegex());
                 MalfromedToken err = new(file, s, i, i + val.Length);
                 if (val.Count(c => c == '.') > 1) {
                     err.Raise("numbers cannot have more than one decimal point");
@@ -118,7 +118,7 @@ public partial class Lexer {
             } else if (s[i] == '\'') {
                 // Char literals
 
-                string val = bucket(s, i+1, CharRegex());
+                string val = Bucket(s, i+1, CharRegex());
                 if (val.Length != 1) {
                     new MalfromedToken(file, s, "char literals must be one character long", i, i + val.Length+1).Raise();
                 } else {
@@ -128,7 +128,7 @@ public partial class Lexer {
             } else if (char.IsLetter(s[i])) {
                 // Keywords
 
-                string val = bucket(s, i, SpaceRegex());
+                string val = Bucket(s, i, SpaceRegex());
                 if (keywords.Contains(val)) {
                     curLine.Add(new Token("keyword", val, i, i + val.Length));
                 } else {
@@ -138,7 +138,7 @@ public partial class Lexer {
             } else if (s[i] == '"') {
                 // String literals
 
-                string val = bucket(s, i+1, StrRegex());
+                string val = Bucket(s, i+1, StrRegex());
                 curLine.Add(new Token("str", val, i, i + val.Length+2));
                 i += val.Length + 1;
             } else {
