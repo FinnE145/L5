@@ -6,6 +6,7 @@ using L5.Main;
 namespace L5;
 
 public partial class Lexer {
+    private Compiler compiler;
     public class Token {
         public string type = "";
         public string value = "";
@@ -22,6 +23,10 @@ public partial class Lexer {
         public override string ToString() {
             return $"Token({type}, \"{value}\", {start}, {end})";
         }
+    }
+
+    public Lexer(Compiler c) {
+        compiler = c;
     }
 
     [GeneratedRegex("[^0-9\\.]")]
@@ -47,7 +52,7 @@ public partial class Lexer {
         "call"
     };
 
-    private Dictionary<string, string> symbolTokens {
+    private Dictionary<string, string> SymbolTokens {
         get {
             return new() {
                 {"index", "@"},
@@ -88,6 +93,8 @@ public partial class Lexer {
         List<Token[]> tokenList = new();
         List<Token> curLine = new();
 
+        string file = Path.GetFileName(compiler.file);
+
         for (int i = 0; i < s.Length; i++) {
             if (s[i] == '\n') {
                 // Newlines --> Add current line to tokenList and clear curLine
@@ -97,7 +104,7 @@ public partial class Lexer {
                 // Numbers
 
                 string val = bucket(s, i, NumRegex());
-                MalfromedToken err = new(Compiler.getDisplayFile(), s, i, i + val.Length);
+                MalfromedToken err = new(file, s, i, i + val.Length);
                 if (val.Count(c => c == '.') > 1) {
                     err.Raise("numbers cannot have more than one decimal point");
                 }
@@ -113,7 +120,7 @@ public partial class Lexer {
 
                 string val = bucket(s, i+1, CharRegex());
                 if (val.Length != 1) {
-                    new MalfromedToken(Compiler.getDisplayFile(), s, "char literals must be one character long", i, i + val.Length+1).Raise();
+                    new MalfromedToken(file, s, "char literals must be one character long", i, i + val.Length+1).Raise();
                 } else {
                     curLine.Add(new Token("char", val[..1], i, i + val.Length+2));
                 }
@@ -125,7 +132,7 @@ public partial class Lexer {
                 if (keywords.Contains(val)) {
                     curLine.Add(new Token("keyword", val, i, i + val.Length));
                 } else {
-                    new MalfromedToken(Compiler.getDisplayFile(), s, $"{val} is not a recognised keyword", i, i + val.Length-1).Raise();
+                    new MalfromedToken(file, s, $"{val} is not a recognised keyword", i, i + val.Length-1).Raise();
                 }
                 i += val.Length-1;
             } else if (s[i] == '"') {
@@ -137,16 +144,16 @@ public partial class Lexer {
             } else {
                 string type = "";
                 string val = "";
-                for (int j = 0; j < symbolTokens.Count; j++) {
-                    type = symbolTokens.Keys.ElementAt(j);
-                    val = symbolTokens.Values.ElementAt(j);
+                for (int j = 0; j < SymbolTokens.Count; j++) {
+                    type = SymbolTokens.Keys.ElementAt(j);
+                    val = SymbolTokens.Values.ElementAt(j);
                     if (s[i..].StartsWith(val)) {
                         curLine.Add(new Token(type, val, i, i + val.Length));
                         break;
                     }
                 }
                 if (type == "") {
-                    new MalfromedToken(Compiler.getDisplayFile(), s, $"`{s[i]}` is not the beginning of any known token", i, i + 1).Raise();
+                    new MalfromedToken(file, s, $"`{s[i]}` is not the beginning of any known token", i, i + 1).Raise();
                 }
             }
         }
