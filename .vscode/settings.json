@@ -1,8 +1,0 @@
-{
-    "dotnet.defaultSolution": "L5.sln",
-    //"explorer.excludeGitIgnore": true,
-    "files.exclude": {
-        "**/bin": true,
-        "**/obj": true
-    }
-}
